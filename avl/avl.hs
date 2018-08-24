@@ -65,7 +65,7 @@ insertBst x (Node n (t1, h1) (t2, h2)) =
 
 rebalance :: Tree -> Tree
 rebalance t =
-  if isBalanced t then t
+  if abs (bf t) <= 1 then t
   else Control.Exception.assert (abs (bf t) == 2) (case t of
          Node n (tl, _) (tr, _) ->
            if bf t == 2 then
