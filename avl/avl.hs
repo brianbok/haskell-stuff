@@ -105,10 +105,9 @@ insertManyAvl = foldr insertAvl Leaf
 
 x = putStrLn . drawTree . insertManyAvl
 y = putStrLn . drawTree . insertManyBst
-rnums = [1, 23, 2, 24, 2, 5, 88, 14, 12, 3, 45, 70, -8, 9, 2]
+rnums = [1 .. 1000000]
+
 main = do
-  x rnums
-  y rnums
   print $ height $ insertManyAvl rnums
   print $ height $ insertManyBst rnums
   print $ all (\n -> search n (insertManyAvl rnums)) rnums
