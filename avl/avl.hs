@@ -95,6 +95,28 @@ rightRotate (Node y (xTree, _) (cTree, _)) =
     Node x (aTree, _) (bTree, _) ->
       createTree x aTree (createTree y bTree cTree)
 
+deleteAvl :: Int -> Tree -> Tree
+deleteAvl x Leaf = error "Not in tree"
+deleteAvl x (Node n (t1, h1) (t2, h2)) =
+  let t' = if x == n then deleteAvlAtRoot (Node n (t1, h1) (t2, h2))
+        else if x < n then createTree n (deleteAvl x t1) t2
+        else createTree n t1 (deleteAvl x t2)
+  in rebalance t'
+
+deleteAvlAtRoot :: Tree -> Tree
+deleteAvlAtRoot (Node _ (Leaf, _) (Leaf, _)) = Leaf
+deleteAvlAtRoot (Node _ (Leaf, _) (t2, _)) = t2
+deleteAvlAtRoot (Node _ (t1, _) (t2, _)) =
+  let (predecessor, t1') = removePred t1
+  in rebalance $ createTree predecessor t1' t2
+
+removePred :: Tree -> (Int, Tree)
+removePred (Node n (Leaf, _) (Leaf, _)) = (n, Leaf)
+removePred (Node n (t1, _) (Leaf, _)) = (n, t1)
+removePred (Node n (t1, _) (t2, _)) =
+    let (p, t') = removePred t2
+    in (p, rebalance $ createTree n t1 t')
+
 toDataTree Leaf = Data.Tree.Node "Leaf" []
 toDataTree (Node x (t1, _) (t2, _)) = Data.Tree.Node (show x) [toDataTree t1, toDataTree t2]
 
